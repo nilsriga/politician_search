@@ -1,0 +1,121 @@
+@layout('layout')
+
+@section('title')
+List of Latvian Politicians form 12th Saema
+@endsection
+
+@section('content')
+
+<div id="app">
+    <button v-on:click="getPoliticians()">Search</button>
+
+    <div class="col-sm-12">
+        <div class="offset">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Image</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="politician in politicians">
+                        <td>@{{politician.given_name}}</td>
+                        <td>@{{politician.family_name}}</td>
+                        <td><img :src="politician.image_url"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <nav aria-label="Latvian Politicians">
+                <ul class="pagination">
+                    <li class="page-item">
+                        <button type="button" class="page-link" v-if="page != 1" @click="page--"> Previous </button>
+                    </li>
+                    <li class="page-item">
+                        <button type="button" class="page-link" v-for="pageNumber in pages.slice(page-1, page+5)"
+                            @click="page = pageNumber"> @{{pageNumber}} </button>
+                    </li>
+                    <li class="page-item">
+                        <button type="button" @click="page++" v-if="page < pages.length" class="page-link"> Next
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            politicians: [],
+            posts: [''],
+            page: 1,
+            perPage: 9,
+            pages: [],
+        },
+        mounted() {
+            this.getPoliticians()
+        },
+        methods: {
+            getPoliticians() {
+                axios.get('/politicians')
+                    .then((response) => {
+                        // console.log(response);
+                        this.politicianName = response.data.politicians.forEach((politician) => {
+                            this.politicians.push(politician);
+                        });
+                        console.log(this.politicians);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            },
+            getPosts() {
+                let data = [];
+                for (let i = 0; i < 200; i++) {
+                    this.posts.push({
+                        first: 'John',
+                        last: 'Doe',
+                        suffix: '#' + i
+                    });
+                }
+            },
+            setPages() {
+                let numberOfPages = Math.ceil(this.posts.length / this.perPage);
+                for (let index = 1; index <= numberOfPages; index++) {
+                    this.pages.push(index);
+                }
+            },
+            paginate(posts) {
+                let page = this.page;
+                let perPage = this.perPage;
+                let from = (page * perPage) - perPage;
+                let to = (page * perPage);
+                return posts.slice(from, to);
+            },
+        },
+        computed: {
+            displayedPosts() {
+                return this.paginate(this.posts);
+            }
+        },
+        watch: {
+            posts() {
+                this.setPages();
+            }
+        },
+        created() {
+            this.getPosts();
+        },
+        filters: {
+            trimWords(value) {
+                return value.split(" ").splice(0, 20).join(" ") + '...';
+            }
+        }
+
+    })
+</script>
+@endsection

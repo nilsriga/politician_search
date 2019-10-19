@@ -1,0 +1,42 @@
+@layout('layout')
+
+@section('title')
+List of Latvian Politicians form 12th Saema
+@endsection
+
+@section('content')
+
+<nav class="text-center mb-5 col-12">
+    <button class="btn btn-secondary mb-2" v-on:click="getPoliticians(0); offset = 0; page = 0">First
+        Page</button>
+    <button class="btn btn-secondary mb-2" v-on:click="getPreviousPage()">Previous Page</button>
+    <div class="inline" v-for="item in paginationPages">
+        <button class="btn btn-secondary mr-1 ml-1  mb-2"
+            v-on:click="getPoliticians(item*20); offset = item*20; page = item"
+            v-bind:class="(page == item) ? 'active' : ''">@{{item}}</button>
+    </div>
+    <button class="btn btn-secondary  mb-2" v-on:click="getNextPage()">Next Page</button>
+    <button class="btn btn-secondary  mb-2"
+        v-on:click="getPoliticians(howManyPages * 20); offset = howManyPages * 20; page = howManyPages">Last
+        Page</button>
+</nav>
+<div class="row">
+    <div class="row col-sm-3 align-baseline mx-auto mb-4" v-for="politician in politicians">
+        <img :src="politician.image_url">
+        <h3 class="col-12 mt-4 row">
+            @{{ politician.given_name + " " + politician.family_name }}
+        </h3>
+        <h5 class="col-12 row">
+            @{{ politician.party_name}}
+        </h5>
+        <h6 class="col-12 row">
+            Started: @{{ politician.start_date }}
+        </h6>
+        <h6 class="col-12 row">
+            Ended: @{{ politician.end_date }}
+        </h6>
+    </div>
+</div>
+</div>
+</div>
+@endsection

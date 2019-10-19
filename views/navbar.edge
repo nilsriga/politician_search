@@ -1,0 +1,10 @@
+@section('navbar')
+<div id="app">
+        <div class="container">
+            <form class="inline" v-on:submit.prevent="searchPoliticians()">
+                <input type="search" v-model="searchField" placeholder="Name or Last Name" autofocus>
+            </form>
+            <button class="btn" v-on:click="searchPoliticians()">Search</button>
+            <button class="btn" v-on:click="getPoliticians(); countPoliticians()">Browse All</button>
+            <p>There are @{{allPoliticians}} politicians in this table, in @{{howManyPages}} pages</p>
+@endsection

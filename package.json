@@ -1,0 +1,31 @@
+{
+  "name": "node-weather-tutorial",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "watch": "nodemon ./server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/snotrman/node-weather.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/snotrman/node-weather/issues"
+  },
+  "homepage": "https://github.com/snotrman/node-weather#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.0",
+    "express-edge": "^1.0.0",
+    "request": "^2.88.0",
+    "sqlite3": "^4.1.0",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  }
+}
