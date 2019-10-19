@@ -30,7 +30,7 @@ app.get('/', (req, res) => {
 
 app.get("/politicians/:offset", (req, res, next) => {
     // var sql = "SELECT * FROM politicians LIMIT 20 OFFSET ?;"
-    var sql = "SELECT DISTINCT given_name, family_name, image_url, party_name, start_date, end_date FROM politicians JOIN memberships ON memberships.person_id = politicians.person_id ORDER BY end_date ASC LIMIT 20 OFFSET ?;"
+    var sql = "SELECT * FROM politicians LIMIT 20 OFFSET ?;"
     var params = [req.params.offset];
     db.all(sql, params, (err, rows) => {
         if (err) {
@@ -54,7 +54,7 @@ app.get("/politiciansCount", (req, res, next) => {
 });
 
 app.get("/politicians/search/:name_or_last_name", (req, res, next) => {
-    var sql = "SELECT DISTINCT given_name, family_name, image_url, party_name, start_date, end_date FROM politicians JOIN memberships ON memberships.person_id = politicians.person_id WHERE given_name = ? OR family_name = ? LIMIT 20;"
+    var sql = "SELECT * FROM politicians WHERE given_name = ? OR family_name = ? LIMIT 20 ;"
     var params = [req.params.name_or_last_name, req.params.name_or_last_name]
     db.all(sql, params, (err, rows) => {
         if (err) {
