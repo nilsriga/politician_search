@@ -1,6 +1,6 @@
 const sqlite3 = require('sqlite3').verbose();
 const request = require('request');
-
+const crypto = require('crypto');
 
 // Getting politician data
 function getDataIntoDatabase() {
@@ -43,8 +43,9 @@ function getDataIntoDatabase() {
             id INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT,
             party_name text,
             person_id text,
-            start_date,
-            end_date,
+            start_date text,
+            end_date text,
+            record_hash text UNIQUE,
             FOREIGN KEY(person_id) REFERENCES politicians(person_id) 
             )`,
                 (err) => {
@@ -52,7 +53,20 @@ function getDataIntoDatabase() {
                         console.log("Table Creating " + err);
                         return
                     } else {
-                        var insertMemberships = 'INSERT OR IGNORE INTO memberships (party_name, person_id, start_date, end_date) VALUES (?,?,?,?)';
+                        var insertMemberships = 'INSERT OR IGNORE INTO memberships (party_name, person_id, start_date, end_date, record_hash) VALUES (?,?,?,?,?)';
+                        function ifDataExists(date) {
+                            if (date == undefined) {
+                                return 'no information';
+                            } else {
+                                return date;
+                            }
+                        };
+                        // this function is to create a unique field so that every time when node server starts and parser.js is run, the memberships table is not updated with duplicate data
+                        function createHash(object) {
+                            let checkedObject = ifDataExists(object);
+                            let hash = crypto.createHash('md5').update(JSON.stringify(checkedObject)).digest("hex");
+                            return hash;
+                        }
                         memberships.forEach((membership) => {
                             function humanize(partyName) {
                                 var frags = partyName.split('_');
@@ -65,14 +79,7 @@ function getDataIntoDatabase() {
                                 }
                                 return removeMark.join(' ');
                             };
-                            function ifDataExists(date) {
-                                if (date == undefined) {
-                                    return 'no information';
-                                } else {
-                                    return date;
-                                }
-                            };
-                            db.run(insertMemberships, [humanize(membership.on_behalf_of_id), membership.person_id, ifDataExists(membership.start_date), ifDataExists(membership.end_date)])
+                            db.run(insertMemberships, [humanize(membership.on_behalf_of_id), membership.person_id, ifDataExists(membership.start_date), ifDataExists(membership.end_date), createHash(membership)])
                         })
                     }
                 }
