@@ -30,8 +30,23 @@ new Vue({
             axios.get('/politicians/' + (offset != undefined ? offset : this.offset))
                 .then((response) => {
                     this.politicianName = response.data.politicians.forEach((politician) => {
-                        this.politicians.push(politician);
+                        this.getMemberships(politician);
                     });
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            console.log(this.politicians);
+        },
+        getMemberships(politician) {
+            var politicianMemberships = [];
+            politician.memberships = politicianMemberships;
+            this.politicians.push(politician);
+            axios.get('/politicians/memberships/' + politician.person_id)
+                .then((response) => {
+                    response.data.politicians.forEach((membership) => {
+                        politicianMemberships.push(membership)
+                    })
                 })
                 .catch((error) => {
                     console.log(error);
@@ -44,10 +59,10 @@ new Vue({
                 axios.get('/politicians/search/' + this.searchField)
                     .then((response) => {
                         this.politicianName = response.data.politicians.forEach((politician) => {
-                            this.politicians.push(politician);
                             this.allPoliticians = this.politicians.length;
                             this.howManyPages = Math.floor(this.allPoliticians / 20);
                             this.paginationPages = Array.from(Array(this.howManyPages + 1).keys());
+                            this.getMemberships(politician);
                         });
                     })
                     .catch((error) => {
