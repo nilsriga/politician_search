@@ -19,30 +19,43 @@ List of Latvian Politicians form 12th Saema
         v-on:click="getPoliticians(howManyPages * 20); offset = howManyPages * 20; page = howManyPages">Last
         Page</button>
 </nav>
-<div class="row">
-    <div v-for="politician in politicians">
-        <div class="col">
-            <div class="col">
-                <img :src="politician.image_url">
-            </div>
-            <div>
-                <h3>
-                    @{{ politician.given_name + " " + politician.family_name }}
-                </h3>
-            </div>
-            <div v-for="memberships in politician.memberships">
-                <h5>
-                    @{{ memberships.party_name}}
-                </h5>
-                <h6>
-                    Started: @{{ memberships.start_date }}
-                </h6>
-                <h6>
-                    Ended: @{{ memberships.end_date }}
-                </h6>
-            </div>
+<table class="table table-borderless">
+    <thead>
+        <tr>
+            <th>Picture</th>
+            <th>Name</th>
+            <th colspan="5">Memberships In Every 4 Year Parliamentary Term</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr v-for="politician in politicians">
+            <td><img :src="politician.image_url"></td>
+            <td>@{{ politician.given_name + " " + politician.family_name }}</td>
+            <td v-for="memberships in politician.memberships">
+            <h5>@{{ memberships.party_name}}</h5>
+            Started:
+            <br>
+            @{{ memberships.start_date }}
+            Ended:
+            <br>
+            @{{ memberships.end_date }}
+            </td>
+        </tr>
+    </tbody>
+</table>
+<nav class="text-center mb-5 col-12">
+        <button class="btn btn-secondary mb-2" v-on:click="getPoliticians(0); offset = 0; page = 0">First Page</button>
+        <button class="btn btn-secondary mb-2" v-on:click="getPreviousPage()">Previous Page</button>
+        <div class="inline" v-for="item in paginationPages">
+            <button class="btn btn-secondary mr-1 ml-1  mb-2"
+                v-on:click="getPoliticians(item*20); offset = item*20; page = item"
+                v-bind:class="(page == item) ? 'active' : ''">@{{item}}</button>
         </div>
-    </div>
+        <button class="btn btn-secondary  mb-2" v-on:click="getNextPage()">Next Page</button>
+        <button class="btn btn-secondary  mb-2"
+            v-on:click="getPoliticians(howManyPages * 20); offset = howManyPages * 20; page = howManyPages">Last
+            Page</button>
+    </nav>
 </div>
 </div>
 </div>
