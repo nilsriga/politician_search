@@ -36,7 +36,6 @@ new Vue({
                 .catch((error) => {
                     console.log(error);
                 });
-            console.log(this.politicians);
         },
         getMemberships(politician) {
             var politicianMemberships = [];
