@@ -19,7 +19,7 @@
   "homepage": "https://github.com/snotrman/node-weather#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
-    "express": "^4.17.0",
+    "express": "^4.21.2",
     "express-edge": "^1.0.0",
     "path": "^0.12.7",
     "request": "^2.88.0",
